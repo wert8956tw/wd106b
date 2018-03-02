@@ -5,7 +5,7 @@
 課程名稱   | 網頁設計
 開課單位   | 金門大學資訊工程系
 開課年度   | 106 學年下學期
-學員姓名   | 
+學員姓名   | 陳佳均
 教師姓名   | 陳鍾誠
 上課教材   | [wiki](https://github.com/cccnqu/wd106b/wiki)
 程式範例   | [example](example)
