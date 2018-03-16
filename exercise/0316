@@ -4,8 +4,24 @@
 <meta charset="utf-8">
 <title>我的履歷</title>
 <meta http-equiv="refresh" content="30">
+<style type="text/css">
+body {
+margin-top: 0px;
+margin-right: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+}
+body{
+height:1000px;
+margin-top:0px;
+background: -webkit-linear-gradient(yellow,blue);
+background: -o-linear-gradient(yellow,blue);
+background: -moz-linear-gradient(yellow,blue);
+background: linear-gradient(yellow,blue);
+}
+	</style>
 </head>
-<body>
+<body bgcolor="#96FFFF">
 <img src="https://www.guidedogsvictoria.com.au/wp-content/uploads/2018/01/pleased-to-meet-you-1.png" style="display:block; margin:auto;" />
 <a href="https://www.facebook.com/wert8956tw" target="_blank" ><font size="5">陳佳均</a>
 <table style="border:3px #FFD382 dashed;" cellpadding="10" border="1">
