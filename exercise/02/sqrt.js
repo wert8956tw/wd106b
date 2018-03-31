@@ -1,6 +1,5 @@
 function sqrt(n){
-    "use strict";
-    let x
+    var x
     for(x=0;x*x < n;x+=0.001){
     }
     return x

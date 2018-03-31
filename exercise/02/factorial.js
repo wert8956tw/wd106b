@@ -1,7 +1,6 @@
-function factorial(n) {
-    "use strict";
-  let result = 1
-  for (let i=1; i<=n; i++) {
+function factorial(n){
+  var result = 1
+  for (var i=1; i<=n; i++) {
     result =result * i
   }
   return result
