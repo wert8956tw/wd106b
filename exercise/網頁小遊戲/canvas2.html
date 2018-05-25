@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>打磚塊</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="480" height="320"></canvas>
+
+<script>
+	// JavaScript code goes here
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d"); //建立ctx變數儲存"2D渲染環境"
+    var x = canvas.width/2; //定義x
+    var y = canvas.height-30; //定義y
+    var dx = 2;
+    var dy = -2;
+    var ballRadius = 10; //球的半徑
+    var paddleHeight = 10; //槳的高度
+    var paddleWidth = 75; //槳的寬度
+    var paddleX = (canvas.width-paddleWidth)/2;
+    var rightPressed = false; //右側按鈕
+    var leftPressed = false; //左側按鈕
+    var brickRowCount = 3; //行
+    var brickColumnCount = 5;//列
+    var brickWidth = 75; //寬
+    var brickHeight = 20; //高
+    var brickPadding = 10;
+    var brickOffsetTop = 30;
+    var brickOffsetLeft = 30;
+    var score = 0; //計算分數
+    var lives = 3;//給予玩家３條命
+
+    var bricks = [];
+    for(var c=0; c<brickColumnCount; c++) {
+        bricks[c] = [];
+        for(var r=0; r<brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 }; //為每個磚塊對象添加一個屬性
+        }
+    }
+
+    document.addEventListener("keydown", keyDownHandler, false); //被按下
+    document.addEventListener("keyup", keyUpHandler, false); //停止按
+    document.addEventListener("mousemove", mouseMoveHandler, false);//滑鼠控制
+
+    function keyDownHandler(e) {
+        if(e.keyCode == 39) {
+            rightPressed = true;
+        }
+        else if(e.keyCode == 37) {
+            leftPressed = true;
+        }
+    }
+
+    function keyUpHandler(e) {
+        if(e.keyCode == 39) {
+            rightPressed = false;
+        }
+        else if(e.keyCode == 37) {
+            leftPressed = false;
+        }
+    }
+
+    function mouseMoveHandler(e) {
+        var relativeX = e.clientX - canvas.offsetLeft;
+        if(relativeX > 0 && relativeX < canvas.width) {
+            paddleX = relativeX - paddleWidth/2;
+        }
+    }
+
+    function collisionDetection() {//碰撞檢測
+        for(var c=0; c<brickColumnCount; c++) {
+            for(var r=0; r<brickRowCount; r++) {
+                var b = bricks[c][r];
+                if(b.status == 1) {//發生碰撞給訂專的狀態
+                    if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                        dy = -dy;
+                        b.status = 0;
+                        score++;//分數累加
+                        if(score == brickRowCount*brickColumnCount) {//所有磚塊都被打掉彈出勝利
+                            alert("勝利");
+                            document.location.reload();//document.location.reload()功能重新加載頁面，並在點擊警報按鈕後再次啟動遊戲。
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function drawBall(){
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius , 0, Math.PI*2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    } 
+
+    function drawBricks() {
+        for(var c=0; c<brickColumnCount; c++) {
+            for(var r=0; r<brickRowCount; r++) {
+                if(bricks[c][r].status == 1) {//磚塊被擊中後消失
+                    var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+                    var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = "#0095DD";
+                    ctx.fill();
+                    ctx.closePath();
+                }
+            }
+        }
+    }
+
+    function drawScore() {//繪製分數計數器
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("Score: "+score, 8, 20);
+    }
+
+    function drawLives() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+    }
+
+    function draw(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height); //把舊的清除掉
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        drawScore();
+        drawLives()
+        collisionDetection();
+
+        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) { //左右
+            dx = -dx;
+        }
+        if(y + dy < ballRadius) { //上
+            dy = -dy;
+        } else if(y + dy > canvas.height-ballRadius) { //碰到底部遊戲結束
+            if(x > paddleX && x < paddleX + paddleWidth) { //使槳擊中球
+                dy = -dy; //可調擊中球之後的速度
+            }
+            else{
+                lives--;
+                if(!lives) {
+                    alert("GAME OVER");
+                    document.location.reload();
+                }
+                else {
+                    x = canvas.width/2;
+                    y = canvas.height-30;
+                    dx = 3;
+                    dy = -3;
+                    paddleX = (canvas.width-paddleWidth)/2;
+                }
+            }
+        }
+        if(rightPressed && paddleX < canvas.width-paddleWidth) { //槳左右移動速度
+            paddleX += 7;
+        }
+        else if(leftPressed && paddleX > 0) {
+            paddleX -= 7;
+        }
+        x += dx;
+        y += dy;
+        requestAnimationFrame(draw);
+    }
+    draw();
+    
+
+
+/* 練習改變物體的大小和顏色
+    ctx.beginPath();
+    ctx.rect(20, 40, 50, 50); //定義矩形(正方形)
+    ctx.fillStyle = "#FF0000"; //儲存紅色
+    ctx.fill(); //填滿圖形
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc(240, 160, 20, 0,Math.PI*2, false); //定義圓形
+    //(x座標,y座標,圓的半徑,圓弧開始,結束的角度,繪製的方向)
+    ctx.fillStyle = "green"; //儲存綠色
+    ctx.fill(); //填滿圖形
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.rect(160, 10, 100, 40); //定義矩形(長方形)
+    ctx.strokeStyle = "rgba(0, 0, 255,  0.5)"; //藍色邊框呈現半透明
+    ctx.stroke(); //為外輪廓線上色
+    ctx.closePath();
+*/
+//參考網址 https://developer.mozilla.org/zh-TW/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
+</script>
+
+</body>
+</html>
