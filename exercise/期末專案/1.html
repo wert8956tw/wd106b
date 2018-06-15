@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <style>
+           canvas{
+           background:#eee;
+           }
+        </style>
+        <title>消除相同色</title>
+        <meta charset="">
+        <script src="event.js"></script>
+        <link rel="stylesheet" href="">
+        <script>
+            window.onload=function  (){
+                var canvas=document.getElementById("canvas");
+                var cobj=canvas.getContext("2d");
+                var step=2;
+                //創建種子文件
+                var arr=[];
+                for (var i=0; i<8;i++){
+                    var rectObj={
+                        width:50,height:50,color:"rgba("+parseInt(255*Math.random())+
+                        ","+parseInt(255*Math.random())+
+                        ","+parseInt(255*Math.random())+",255)"
+                    }
+                    arr.push(rectObj);
+                }
+                //指定一共的色塊
+                var newarr=[];
+                function sum(step){
+                  for(var i=0;i<step; i++){
+                  for(var j=0;j<arr.length; j++){
+                    var newObj={};
+                    for(var att in arr[j]){
+                      newObj[att]=arr[j][att]
+                    }
+                    newarr.push(newObj);
+                    }
+                  }
+                }
+                sum(step)
+                
+                //alert(newarr.length)
+                //繪製到畫布
+                function drawsum(){
+                    var rows=0;
+                    var cols=0;
+                    for(var i=0;i<newarr.length; i++){
+                      if(i%4==0){
+                        rows++; //行
+                        cols=0  //列
+                    }
+                    cobj.beginPath();
+                    cobj.fillStyle=newarr[i].color;
+                    cobj.rect(cols*(newarr[i].width+5),rows*(newarr[i].height+5),newarr[i].width,newarr[i].height);
+                    cobj.fill();
+                    newarr[i].x=cols*(newarr[i].width+5);
+                    newarr[i].y=rows*(newarr[i].height+5);
+                    cols++;
+                  }
+                }
+                drawsum();
+                var arrs=[];
+                var numarr=[];
+                var num=0;
+                canvas.onclick=function(e){
+                    var mx=e.layerX;
+                    var my=e.layerY;
+                    function newDraw (){
+                      cobj.clearRect(0,0,500,500);
+                        for (var i=0;i<newarr.length; i++){
+                          cobj.fillStyle=newarr[i].color;
+                          var str=newarr[i].x+","+newarr[i].y+","+newarr[i].width+","+newarr[i].height;
+                          var event=new addEvent(cobj,"rect",str,function (){
+                              if(i==numarr[0]||i==numarr[1]){
+                                  return;
+                              }
+                              arrs.push(newarr[i]);
+                              numarr.push(i);
+                              if(arrs.length==2){
+                                  if(arrs[0].color==arrs[1].color&&numarr[0]!=numarr[1]){
+                                     arrs[0].color="rgba(0,0,0,0)";
+                                     arrs[1].color="rgba(0,0,0,0)";
+                                     newDraw();
+                                     num++;
+                                     if(num==newarr.length/2){
+                                         step*=2;
+                                         newarr=[];
+                                         sum(step);
+                                         drawsum();
+                                         num=0;
+                                     }
+                                  }
+                                  arrs=[];
+                                  numarr=[];
+                              }  
+                        });
+                        event.add(mx,my)
+                    }      
+                }
+                newDraw();
+            }
+         }
+        </script>
+    </head>
+    <body>
+        <canvas id="canvas" width=500 height=500>
+        </canvas>
+        <a href="main.html">回主頁</a>
+    </body>
+</html>
