@@ -11,10 +11,10 @@ margin-left: 0px;
 body{
 height:1000px;
 margin-top:0px;
-background: -webkit-linear-gradient(blue,green);
-background: -o-linear-gradient(blue,green);
-background: -moz-linear-gradient(blue,green);
-background: linear-gradient(blue,green);
+background: -webkit-linear-gradient(green,blue);
+background: -o-linear-gradient(green,blue);
+background: -moz-linear-gradient(green,blue);
+background: linear-gradient(green,blue);
 text-align:center;
 }
 </style>

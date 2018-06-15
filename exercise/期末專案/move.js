@@ -21,7 +21,7 @@ text-align:center;
 </style>
 <div style="width:100px">
   <button class="big" onclick="canvas.start()">消除相同色</button><br/><br/>
-  <button class="big">66666</button><br/><br/>
+  <button class="big"  onclick="play.start()">打磚塊</button><br/><br/>
   <button class="big" onclick="next.start()">下一頁</button><br/><br/>
 </div>
 `
