@@ -18,7 +18,7 @@ background: linear-gradient(blue,green);
 text-align:center;
 }
 </style>
-<button onclick="Shop.start()">回上一頁喔</button>
+<button onclick="next.start()">回上一頁喔</button>
 `
 next.start = function () {
   show(next.html)
